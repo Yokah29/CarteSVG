@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sondage - Pays de Morlaix</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .carte-container {
+            flex: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        svg { width: 100%; height: auto; }
+
+        .panneau-droit {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 300px;
+        }
+
+        .vote-zone, .resultats-zone {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #4dc2d6;
+            border-radius: 8px;
+            margin-top: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #005f99;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        button:hover { background-color: #003d66; }
+
+        /* Message de feedback sous le bouton */
+        #feedback-message {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        /* Barres de résultat */
+        .resultat-item { margin-bottom: 15px; }
+        .resultat-label { font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .barre-container { background: #e0e0e0; border-radius: 5px; overflow: hidden; height: 20px; }
+        .barre-remplissage { height: 100%; transition: width 0.5s ease; color: white; font-size: 12px; display: flex; align-items: center; padding-left: 5px; box-sizing: border-box; }
+
+        /* ========================================= */
+        /* STYLES SVG                                */
+        /* ========================================= */
+        .zone-interactive { cursor: pointer; }
+
+        .zone-interactive:hover path {
+            fill: #e9fbfdd2; stroke: #005f99; transition: fill 0.3s ease, stroke 0.3s ease;
+        }
+
+        /* Texte de nom de zone (apparaît au survol) */
+        .zone-interactive text.nom-zone {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-weight: bold; fill: #000266; stroke: white; stroke-width: 0.5; paint-order: stroke fill;
+        }
+        .zone-interactive:hover text.nom-zone { opacity: 1; }
+
+        /* Compteur sur la carte (toujours visible) */
+        text.compteur-carte {
+            font-size: 12px; 
+            font-weight: 900;
+            fill: #ffffff;
+            stroke: #000000;
+            stroke-width: 1;
+            paint-order: stroke fill;
+            pointer-events: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CARTE SVG -->
+    <div class="carte-container">
+        <svg id="svg5" version="1.1" viewBox="0 0 210 297" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="g5">
+                <g stroke-linejoin="bevel">
+                    
+                    <!-- MORLAIX -->
+                    <g id="MorlaixCo" class="zone-interactive" transform="translate(.76322 -.25441)"> 
+                        <path d="m138.74 70.68-1.5472 5.5924-2.1415-2.8556-0.59531 1.7849-1.6655-0.11937-0.71416 3.5698-3.2127 1.1901v4.5217l1.9038 3.0934-1.1896 4.9976-2.142-4.7594-1.9038 0.35708 1.9038 7.8533 1.309 7.2585-2.3797 2.2608-1.666-3.5698-7.9721-4.7594-2.2608-6.5448 0.11886-0.95188 3.5698-0.95188 0.23771-1.309-7.8533-1.309-2.7368 5.5929-1.666-0.59531-1.309 2.0231-2.9745 0.23771 2.3084 3.976-1.6831 9.5922 3.3657 5.8896 2.8608 2.5244-3.8706 11.611-7.5727 11.779-3.87 5.0483-0.50488 3.1972-1.851 1.0098-0.84129 4.8803 2.1875 5.7211-1.3462 3.1977 1.3462 5.2162 6.3944 5.3852 5.7216 9.9281-1.0098 5.7216 22.549-8.414 6.2265 1.851 2.3559-2.8608 11.106-3.0288 19.689-1.5146 2.5239-4.5434 2.8608 0.33641 5.0483-2.6923 8.5824 3.5336 1.0092-9.7601 16.323-15.313-5.6689-8.245-2.6179 0.83251-2.4986-0.23771-0.35709-2.4991 2.0231-4.4023-0.35709-3.3321-6.3066-4.4023-2.6179 0.47594-2.0226-1.7849-0.35709-6.1877-2.4986-1.3084-2.7368-15.826 0.83303-2.3797 5.2353-5.1165-0.83303-0.71417 0.71417-5.8307 0.83302-0.83302-7.2585 1.5472-2.975-1.1901-4.0458 0.11886v-2.1415l-5.9495-3.0939-6.0684-2.6179-5.7118 0.47594-2.9745 2.0231-3.2127-3.6887 0.11885-1.1901-3.2127-0.23823z" fill="#4dc2d6" stroke="#000" stroke-width="1.0583"/>
+                        <text class="nom-zone" x="124.16391" y="131.98488" font-family="sans-serif" font-size="4.2333px" xml:space="preserve"><tspan x="124.16391" y="131.98488">Morlaix Communauté</tspan></text>
+                        <text id="count-MorlaixCo" class="compteur-carte" x="124" y="115">0</text>
+                    </g>
+                    
+                    <!-- LANDIVISIAU -->
+                    <g id="LandivisiauCo" class="zone-interactive">
+                        <path d="m88.291 202.28 5.4736-3.0938 9.7264-11.224 1.0098-5.7216-5.7216-9.9281-6.3944-5.3852-1.3462-5.2162 1.3462-3.1977-2.1875-5.7211 0.84129-4.8803 1.8511-1.0098 0.50488-3.1972 11.443-16.827 3.8706-11.611-3.5249-2.0351-2.002 3.4675-4.0049 2.3122-1.6501-1.6501-2.3557 0.6312-2.1667-3.7528h-2.7223l-3.1045-3.1045h-5.3094l-1.6491-6.1546h-3.3992l-2.6019 4.5067h-1.1843l-2.0193-4.0649-4.0387-0.75725-0.4207-1.0097-3.1973-0.58897-0.75725-1.8511-1.6828 0.25242-1.8511-0.42069-1.6828 0.0841-1.4304-0.4207 0.58897 5.0483-2.3559 0.0841-2.0193-4.88-2.7766-0.16828-2.9449 6.058-3.1973 3.4497 1.0938 4.4594-1.8511 2.0193v3.3656l-2.1035 0.58897-2.1035 4.0387-12.705-4.2911 1.0938 4.7959 2.8607 4.5435-4.3752-0.33655-1.0938 2.6083 0.84139 4.9642 3.029 3.618 2.1876 3.7021 2.6083-0.42069 1.3462-1.8511 2.44 0.33656 0.50483 2.6924-1.0097 6.3946 0.75725 0.84139 7.5725-3.2814 7.8249 1.4304 2.3559-0.50483 1.8511 0.33656 1.3462 3.9545-1.9352 3.029 2.44 1.851 0.08414 4.8801 2.1035 1.5986v2.7766l-3.4497 2.44 0.08414 5.8897-0.84139 2.7766 2.6083 13.799 2.1876 3.9545 5.3008 4.4594 15.734-1.7669z" fill="#d09a24" fill-opacity=".77878" stroke="#000" stroke-width="1.0583"/>
+                        <text class="nom-zone" x="38.764565" y="131.55746" font-family="sans-serif" font-size="4.2333px" xml:space="preserve"><tspan x="38.764565" y="131.55746">CC du Pays de Landivisiau</tspan></text>
+                        <text id="count-LandivisiauCo" class="compteur-carte" x="45" y="115">0</text>
+                    </g>
+                    
+                    <!-- HAUT-LEON -->
+                    <g id="Haut-L__onCo" class="zone-interactive" transform="translate(-2.8e-4,-9e-5)">
+                        <path d="m86.895 52.377-4.2912 1.5141-0.08423 2.1249 3.5553 0.12609 0.44132 1.2408 2.3559-1.2619 2.2717 0.37879 2.6293 0.21033 0.69453-0.79944-0.67334-0.31574-2.9239-3.2179zm3.2603 9.5917-1.2619 2.5244-0.12609 1.2619-1.7668 1.4723-2.4402 0.54674-2.1875-0.79892-0.04237 2.6923-2.3136 0.92553-1.8934-0.92553-1.9353 2.0195-1.0092 3.4075-0.12661 1.3462-2.4396 0.79944-3.8706-2.945-3.1554 1.2619-0.21032-2.8608-7.8248-0.16795-0.92552-1.4728-2.945 1.8092-10.601 1.6826-0.88315-1.2196-0.79943 0.79891-5.301 5.0906-2.8184 0.96738-1.2201 4.6276 4.8379 1.2624 0.21032 1.2619-6.3526 0.96738-1.3038-2.3559-4.5439 1.851-7.8248-1.3038-1.6407 3.5336-4.5852 0.25218 0.58859 1.7673 2.945 0.58859 1.5146 1.1782 0.08423 1.5146-0.54725 7.0254 3.0711 3.9124 3.7021 0.25269 2.1037 7.8248-1.3462 4.964 2.6081 1.1777 12.705 4.2912 2.1032-4.0385 2.1032-0.58911v-3.3657l1.851-2.019-1.0935-4.4597 3.1972-3.4494 2.945-6.058 2.7766 0.16795 2.019 4.8803 2.3559-0.0842-0.58911-5.0483 3.1135 0.33641 1.851 0.42065 1.6826-0.25219 0.75758 1.851 3.1972 0.58912 0.42065 1.0092 4.0385 0.75757 2.0195 4.0649h1.1839l2.6019-4.5067h3.3993l1.6495 6.1547h5.3092l3.1042 3.1042h2.7228l2.1663 3.7533 2.3559-0.63149 1.65 1.65 4.0049-2.312 2.002-3.4675-2.7016-6.3789-3.4494 0.92552-0.42065-0.75757 1.851-3.1972-0.25269-3.1972 1.7668-3.87-0.5152-2.1983-0.25218-1.5462 0.51521-0.55759 0.84595-3.7801-0.29766-3.5998 1.1767-0.0977-0.21032-1.0098-1.5989-0.42064-2.1032-0.50488-1.557 0.12609 0.67334-1.0098-0.0419-3.4494 0.37827-2.2717-0.25218-1.725-1.0516-1.2619 0.84129-4.039 0.50488-2.1032 1.0092-1.3886-0.25218-3.0706-1.9353 1.0516-2.6081-1.8934-0.9679 0.75757-0.0419 2.9027-2.2298 0.84129-1.6826-1.9771 0.88315-2.5244z" fill="#5cdc1b" fill-opacity=".77878" stroke="#000" stroke-width="1.0583"/>
+                        <text class="nom-zone" x="39.263203" y="92.623009" font-family="sans-serif" font-size="4.2333px" xml:space="preserve"><tspan x="39.263203" y="92.623009">Haut-Léon Communauté</tspan></text>
+                        <text id="count-Haut-L__onCo" class="compteur-carte" x="40" y="75">0</text>
+                    </g>
+                    
+                    <text x="117.53606" y="53.17107" fill="#000000" font-family="sans-serif" font-size="5.2917px" stroke-width=".247" xml:space="preserve"><tspan x="117.53606" y="53.17107">PAYS DE MORLAIX</tspan></text>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <!-- PANNEAU DE VOTE ET RÉSULTATS -->
+    <div class="panneau-droit">
+        <div class="vote-zone">
+            <h2>📍 Où habitez-vous ?</h2>
+            <p>Indiquez votre zone et validez :</p>
+            <select id="selectZone">
+                <option value="">-- Choisir une zone --</option>
+                <option value="MorlaixCo">Morlaix Communauté</option>
+                <option value="LandivisiauCo">CC du Pays de Landivisiau</option>
+                <option value="Haut-L__onCo">Haut-Léon Communauté</option>
+            </select>
+            <button id="btnVote">Valider mon choix</button>
+            <div id="feedback-message"></div>
+        </div>
+
+        <div class="resultats-zone">
+            <h2>📊 Résultats du sondage</h2>
+            <div id="affichageResultats"></div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+        <script>
+        // Configuration des zones
+        const configZones = {
+            "MorlaixCo": { nom: "Morlaix Communauté", couleur: "#4dc2d6" },
+            "LandivisiauCo": { nom: "CC du Pays de Landivisiau", couleur: "#d09a24" },
+            "Haut-L__onCo": { nom: "Haut-Léon Communauté", couleur: "#5cdc1b" }
+        };
+
+        // Les votes ne sont plus stockés ici, on va les chercher au serveur
+        let votes = {};
+
+        const selectElement = document.getElementById("selectZone");
+        const btnVote = document.getElementById("btnVote");
+        const feedbackMsg = document.getElementById("feedback-message");
+        const affichageResultats = document.getElementById("affichageResultats");
+
+        // --- NOUVELLE FONCTION : Demander les résultats au serveur ---
+        async function chargerResultats() {
+            try {
+                const response = await fetch('/api/results');
+                votes = await response.json();
+                mettreAJourAffichage();
+            } catch (error) {
+                console.error("Erreur lors du chargement des résultats :", error);
+            }
+        }
+
+        // Fonction pour mettre à jour l'interface
+        function mettreAJourAffichage() {
+            let totalVotes = 0;
+            for(let id in votes) { totalVotes += votes[id]; }
+
+            let htmlResultats = "";
+
+            for (const id in configZones) {
+                const zone = configZones[id];
+                const count = votes[id] || 0;
+                const pourcentage = totalVotes === 0 ? 0 : Math.round((count / totalVotes) * 100);
+
+                // 1. Mettre à jour le compteur sur la carte SVG
+                const compteurSVG = document.getElementById("count-" + id);
+                if (compteurSVG) compteurSVG.textContent = count;
+
+                // 2. Construire les barres de résultat
+                htmlResultats += `
+                    <div class="resultat-item">
+                        <div class="resultat-label">
+                            <span>${zone.nom}</span>
+                            <span><strong>${count}</strong> vote(s) (${pourcentage}%)</span>
+                        </div>
+                        <div class="barre-container">
+                            <div class="barre-remplissage" style="width: ${pourcentage}%; background-color: ${zone.couleur};"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            htmlResultats += `<p style="text-align:right; margin-top:10px; font-weight:bold;">Total : ${totalVotes} vote(s)</p>`;
+            affichageResultats.innerHTML = htmlResultats;
+        }
+
+        // --- NOUVELLE FONCTION : Envoyer le vote au serveur ---
+        async function ajouterVote(zoneId) {
+            if(!zoneId) {
+                feedbackMsg.textContent = "⚠️ Veuillez d'abord sélectionner une zone !";
+                feedbackMsg.style.color = "red";
+                return;
+            }
+
+            try {
+                // On envoie la requête POST à notre serveur Node.js
+                const response = await fetch('/api/vote', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ zone: zoneId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Le serveur a validé, on met à jour les compteurs localement
+                    votes = data.votes;
+                    mettreAJourAffichage();
+
+                    feedbackMsg.textContent = "✅ Merci ! Vote enregistré sur le serveur pour " + configZones[zoneId].nom;
+                    feedbackMsg.style.color = "green";
+                    selectElement.value = "";
+
+                    setTimeout(() => { feedbackMsg.textContent = ""; }, 3000);
+                }
+            } catch (error) {
+                feedbackMsg.textContent = "❌ Erreur de connexion au serveur.";
+                feedbackMsg.style.color = "red";
+                console.error("Erreur vote :", error);
+            }
+        }
+
+        // Clic sur le bouton Valider
+        btnVote.addEventListener("click", function() {
+            ajouterVote(selectElement.value);
+        });
+
+        // Clic directement sur une zone de la carte
+        document.querySelectorAll(".zone-interactive").forEach(zone => {
+            zone.addEventListener("click", function() {
+                ajouterVote(this.id);
+            });
+        });
+
+        // --- AU CHARGEMENT DE LA PAGE : On charge les résultats du serveur ---
+        chargerResultats();
+
+    </script>
+</body>
+</html>
