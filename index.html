@@ -67,7 +67,6 @@
 
         button:hover { background-color: #003d66; }
 
-        /* Message de feedback sous le bouton */
         #feedback-message {
             margin-top: 10px;
             font-weight: bold;
@@ -75,38 +74,22 @@
             min-height: 20px;
         }
 
-        /* Barres de résultat */
         .resultat-item { margin-bottom: 15px; }
         .resultat-label { font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
         .barre-container { background: #e0e0e0; border-radius: 5px; overflow: hidden; height: 20px; }
         .barre-remplissage { height: 100%; transition: width 0.5s ease; color: white; font-size: 12px; display: flex; align-items: center; padding-left: 5px; box-sizing: border-box; }
 
-        /* ========================================= */
-        /* STYLES SVG                                */
-        /* ========================================= */
+        /* STYLES SVG */
         .zone-interactive { cursor: pointer; }
-
         .zone-interactive:hover path {
             fill: #e9fbfdd2; stroke: #005f99; transition: fill 0.3s ease, stroke 0.3s ease;
         }
-
-        /* Texte de nom de zone (apparaît au survol) */
         .zone-interactive text.nom-zone {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            font-weight: bold; fill: #000266; stroke: white; stroke-width: 0.5; paint-order: stroke fill;
+            opacity: 0; transition: opacity 0.3s ease; font-weight: bold; fill: #000266; stroke: white; stroke-width: 0.5; paint-order: stroke fill;
         }
         .zone-interactive:hover text.nom-zone { opacity: 1; }
-
-        /* Compteur sur la carte (toujours visible) */
         text.compteur-carte {
-            font-size: 12px; 
-            font-weight: 900;
-            fill: #ffffff;
-            stroke: #000000;
-            stroke-width: 1;
-            paint-order: stroke fill;
-            pointer-events: none; 
+            font-size: 12px; font-weight: 900; fill: #ffffff; stroke: #000000; stroke-width: 1; paint-order: stroke fill; pointer-events: none;
         }
     </style>
 </head>
@@ -114,7 +97,7 @@
 
     <!-- CARTE SVG -->
     <div class="carte-container">
-        <svg id="svg5" version="1.1" viewBox="0 0 210 297" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <svg id="svg5" version="1.1" viewBox="0 0 210 297" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
             <g id="g5">
                 <g stroke-linejoin="bevel">
                     
@@ -167,7 +150,7 @@
     </div>
 
     <!-- JAVASCRIPT -->
-            <script>
+    <script>
         const configZones = {
             "MorlaixCo": { nom: "Morlaix Communauté", couleur: "#4dc2d6" },
             "LandivisiauCo": { nom: "CC du Pays de Landivisiau", couleur: "#d09a24" },
@@ -184,7 +167,7 @@
         // Demander les résultats au serveur PHP
         async function chargerResultats() {
             try {
-                const response = await fetch('api/results.php'); // <-- Changement ici
+                const response = await fetch('api/results.php');
                 votes = await response.json();
                 mettreAJourAffichage();
             } catch (error) {
@@ -232,7 +215,7 @@
             }
 
             try {
-                const response = await fetch('api/vote.php', { // <-- Changement ici
+                const response = await fetch('api/vote.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ zone: zoneId })
@@ -257,17 +240,24 @@
             }
         }
 
+        // Clic sur le bouton Valider
         btnVote.addEventListener("click", function() {
             ajouterVote(selectElement.value);
         });
 
+        // Clic directement sur une zone de la carte
         document.querySelectorAll(".zone-interactive").forEach(zone => {
             zone.addEventListener("click", function() {
                 ajouterVote(this.id);
             });
         });
 
+        // --- AU CHARGEMENT DE LA PAGE : On charge les résultats du serveur ---
         chargerResultats();
+
+        // --- ACTUALISATION AUTOMATIQUE : Toutes les 5 secondes (5000 ms) ---
+        setInterval(chargerResultats, 5000);
+
     </script>
 </body>
 </html>
